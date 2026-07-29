@@ -177,8 +177,13 @@ int main(int argc, char* argv[]) {
         plan::PlanDAG dag(std::move(plan), meta);
         dag.build();
 
-        std::shared_lock lock(collectionMutex);
-        collectionManager->add_dag(std::move(dag));
+        // Commented out to provide a dot file
+        // std::shared_lock lock(collectionMutex);
+        // collectionManager->add_dag(std::move(dag));
+
+        std::ofstream out("dag.dot");
+        dag.exportDot(out);
+
     };
 
     auto server_configuration_cb = [&server, &collectionManager, &forward_cb, &query_plan_cb, &collectionMutex](TCPMetaInfo* meta, void* data, size_t len) -> void {
