@@ -1,0 +1,56 @@
+digraph PlanDAG {
+    rankdir=BT;
+    node [shape=record, fontname="Helvetica"];
+    edge [fontname="Helvetica", fontsize=10];
+
+    // Base column nodes
+    base_lineorder_lo_orderdate [label="lineorder.lo_orderdate", style=filled, fillcolor="#FFD700", shape=ellipse];
+    base_date_d_year [label="date.d_year", style=filled, fillcolor="#FFD700", shape=ellipse];
+    base_date_d_datekey [label="date.d_datekey", style=filled, fillcolor="#FFD700", shape=ellipse];
+    base_lineorder_lo_quantity [label="lineorder.lo_quantity", style=filled, fillcolor="#FFD700", shape=ellipse];
+    base_lineorder_lo_extendedprice [label="lineorder.lo_extendedprice", style=filled, fillcolor="#FFD700", shape=ellipse];
+    base_lineorder_lo_discount [label="lineorder.lo_discount", style=filled, fillcolor="#FFD700", shape=ellipse];
+
+    // Operator nodes
+    node_14 [label="{14 | RESULT | sf100_190015919_q_1_1_result | IN: 190015919_inter.190015919_q_1_1_it_13}", style=filled, fillcolor="#90EE90"];
+    node_1 [label="{1 | FILTER | BETWEEN | OUT: 190015919_inter.190015919_q_1_1_it_1}", style=filled, fillcolor="#ADD8E6"];
+    node_2 [label="{2 | FILTER | LT | OUT: 190015919_inter.190015919_q_1_1_it_2}", style=filled, fillcolor="#ADD8E6"];
+    node_3 [label="{3 | FILTER | EQ | OUT: 190015919_inter.190015919_q_1_1_it_3}", style=filled, fillcolor="#ADD8E6"];
+    node_4 [label="{4 | SETOPERATION | INTERSECT | IN: 190015919_inter.190015919_q_1_1_it_1, 190015919_inter.190015919_q_1_1_it_2 | OUT: 190015919_inter.190015919_q_1_1_it_4}"];
+    node_5 [label="{5 | MATERIALIZE | IN: 190015919_inter.190015919_q_1_1_it_4 | OUT: 190015919_inter.190015919_q_1_1_it_5}"];
+    node_6 [label="{6 | MATERIALIZE | IN: 190015919_inter.190015919_q_1_1_it_3 | OUT: 190015919_inter.190015919_q_1_1_it_6}"];
+    node_7 [label="{7 | HASHJOIN | IN: 190015919_inter.190015919_q_1_1_it_6, 190015919_inter.190015919_q_1_1_it_5 | OUT: 190015919_inter.190015919_q_1_1_it_7}"];
+    node_8 [label="{8 | MATERIALIZE | IN: 190015919_inter.190015919_q_1_1_it_4 | OUT: 190015919_inter.190015919_q_1_1_it_8}"];
+    node_9 [label="{9 | MATERIALIZE | IN: 190015919_inter.190015919_q_1_1_it_4 | OUT: 190015919_inter.190015919_q_1_1_it_9}"];
+    node_10 [label="{10 | MATERIALIZE | IN: 190015919_inter.190015919_q_1_1_it_7_o, 190015919_inter.190015919_q_1_1_it_8 | OUT: 190015919_inter.190015919_q_1_1_it_10}"];
+    node_11 [label="{11 | MATERIALIZE | IN: 190015919_inter.190015919_q_1_1_it_7_o, 190015919_inter.190015919_q_1_1_it_9 | OUT: 190015919_inter.190015919_q_1_1_it_11}"];
+    node_12 [label="{12 | MAP | IN: 190015919_inter.190015919_q_1_1_it_10, 190015919_inter.190015919_q_1_1_it_11 | OUT: 190015919_inter.190015919_q_1_1_it_12}"];
+    node_13 [label="{13 | AGGREGATE | SUM | IN: 190015919_inter.190015919_q_1_1_it_12 | OUT: 190015919_inter.190015919_q_1_1_it_13}"];
+
+    // Edges from base columns
+    base_lineorder_lo_orderdate -> node_5 [style=dashed, color="#B8860B"];
+    base_date_d_year -> node_3 [style=dashed, color="#B8860B"];
+    base_date_d_datekey -> node_6 [style=dashed, color="#B8860B"];
+    base_lineorder_lo_quantity -> node_2 [style=dashed, color="#B8860B"];
+    base_lineorder_lo_extendedprice -> node_8 [style=dashed, color="#B8860B"];
+    base_lineorder_lo_discount -> node_1 [style=dashed, color="#B8860B"];
+    base_lineorder_lo_discount -> node_9 [style=dashed, color="#B8860B"];
+
+    // Edges between operators
+    node_13 -> node_14 [label="190015919_q_1_1_it_13"];
+    node_1 -> node_4 [label="190015919_q_1_1_it_1"];
+    node_2 -> node_4 [label="190015919_q_1_1_it_2"];
+    node_4 -> node_5 [label="190015919_q_1_1_it_4"];
+    node_3 -> node_6 [label="190015919_q_1_1_it_3"];
+    node_5 -> node_7 [label="190015919_q_1_1_it_5"];
+    node_6 -> node_7 [label="190015919_q_1_1_it_6"];
+    node_4 -> node_8 [label="190015919_q_1_1_it_4"];
+    node_4 -> node_9 [label="190015919_q_1_1_it_4"];
+    node_7 -> node_10 [label="190015919_q_1_1_it_7_o"];
+    node_8 -> node_10 [label="190015919_q_1_1_it_8"];
+    node_7 -> node_11 [label="190015919_q_1_1_it_7_o"];
+    node_9 -> node_11 [label="190015919_q_1_1_it_9"];
+    node_10 -> node_12 [label="190015919_q_1_1_it_10"];
+    node_11 -> node_12 [label="190015919_q_1_1_it_11"];
+    node_12 -> node_13 [label="190015919_q_1_1_it_12"];
+}
