@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>diff</title>
+<meta name="Generator" content="Vim/9.1">
+<meta name="plugin-version" content="vim9.0_v2">
+<meta name="settings" content="whole_filler,use_css,no_foldcolumn,prevent_copy=,use_input_for_pc=none">
+<meta name="colorscheme" content="none">
+<style>
+<!--
+pre { font-family: monospace; color: #000000; background-color: #ffffff; }
+body { font-family: monospace; color: #000000; background-color: #ffffff; }
+* { font-size: 1em; }
+.Folded { color: #0000c0; background-color: #a8a8a8; padding-bottom: 1px; }
+.PreProc { color: #c000c0; }
+.Type { color: #008000; }
+.Statement { color: #af5f00; }
+.Comment { color: #0000c0; }
+.Constant { color: #c00000; }
+.DiffText { background-color: #ff6060; padding-bottom: 1px; font-weight: bold; }
+.DiffAdd { background-color: #5fd7ff; padding-bottom: 1px; }
+.DiffChange { background-color: #ffd7ff; padding-bottom: 1px; }
+.DiffDelete { color: #8080ff; background-color: #afffff; padding-bottom: 1px; }
+-->
+<!--
+table { table-layout: fixed; }
+html, body, table, tbody { width: 100%; margin: 0; padding: 0; }
+table, td, th { border: 1px solid; }
+td { vertical-align: top; }
+th, td { width: 50.0%; }
+td div { overflow: auto; }
+-->
+</style>
+</head>
+<body>
+<table id='vimCodeElement'>
+<tr>
+<th>/home/stolle/Rubicon/proto/QueryPlan.proto</th>
+<th>/home/stolle/ws25-optimizer-cpp/proto/QueryPlan.proto</th>
+</tr><tr>
+<td><div>
+<pre>
+<span class="Folded">+--  2 lines: syntax = &quot;proto2&quot;;--------------------------------------------------------------------------------------------------------------------</span>
+<span class="PreProc">import</span> <span class="Constant">&quot;WorkItem.proto&quot;</span>;
+
+<span class="Type">message</span> QueryPlan {
+  <span class="Statement">optional</span> <span class="Type">uint32</span> planid = <span class="Constant">1</span>;
+  <span class="Statement">repeated</span> WorkItem planitems = <span class="Constant">2</span>;
+}
+<span class="DiffAdd"> </span><span class="DiffAdd">                                                                                                                                                   </span>
+<span class="Type DiffAdd">message</span><span class="DiffAdd"> QueryGroup {                                                                                                                                </span>
+<span class="DiffAdd">  </span><span class="Statement DiffAdd">required</span><span class="DiffAdd"> </span><span class="Type DiffAdd">uint64</span><span class="DiffAdd"> groupId = </span><span class="Constant DiffAdd">1</span><span class="DiffAdd">;                                                                                                                      </span>
+<span class="DiffAdd">  </span><span class="Statement DiffAdd">repeated</span><span class="DiffAdd"> WorkItem columnTransfers = </span><span class="Constant DiffAdd">2</span><span class="DiffAdd">; </span><span class="Comment DiffAdd">//This should always be a DataTransferItem, but due to internal decisions, we need this wrapping into a WorkItem</span>
+<span class="DiffAdd">  </span><span class="Statement DiffAdd">repeated</span><span class="DiffAdd"> QueryPlan plans = </span><span class="Constant DiffAdd">3</span><span class="DiffAdd">;                                                                                                                     </span>
+<span class="DiffAdd">}</span><span class="DiffAdd">                                                                                                                                                   </span>
+</pre>
+</div></td>
+<td><div>
+<pre>
+<span class="Folded">+--  2 lines: syntax = &quot;proto2&quot;;--------------------------------------------------------------------------------------------------------------------</span>
+<span class="PreProc">import</span> <span class="Constant">&quot;WorkItem.proto&quot;</span>;
+
+<span class="Type">message</span> QueryPlan {
+  <span class="Statement">optional</span> <span class="Type">uint32</span> planid = <span class="Constant">1</span>;
+  <span class="Statement">repeated</span> WorkItem planitems = <span class="Constant">2</span>;
+}
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+</pre>
+</div></td>
+</tr>
+</table>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->
+

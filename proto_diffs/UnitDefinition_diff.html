@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>diff</title>
+<meta name="Generator" content="Vim/9.1">
+<meta name="plugin-version" content="vim9.0_v2">
+<meta name="settings" content="whole_filler,use_css,no_foldcolumn,prevent_copy=,use_input_for_pc=none">
+<meta name="colorscheme" content="none">
+<style>
+<!--
+pre { font-family: monospace; color: #000000; background-color: #ffffff; }
+body { font-family: monospace; color: #000000; background-color: #ffffff; }
+* { font-size: 1em; }
+.Statement { color: #af5f00; }
+.PreProc { color: #c000c0; }
+.Type { color: #008000; }
+.Constant { color: #c00000; }
+.DiffText { background-color: #ff6060; padding-bottom: 1px; font-weight: bold; }
+.DiffAdd { background-color: #5fd7ff; padding-bottom: 1px; }
+.DiffChange { background-color: #ffd7ff; padding-bottom: 1px; }
+.DiffDelete { color: #8080ff; background-color: #afffff; padding-bottom: 1px; }
+-->
+<!--
+table { table-layout: fixed; }
+html, body, table, tbody { width: 100%; margin: 0; padding: 0; }
+table, td, th { border: 1px solid; }
+td { vertical-align: top; }
+th, td { width: 50.0%; }
+td div { overflow: auto; }
+-->
+</style>
+</head>
+<body>
+<table id='vimCodeElement'>
+<tr>
+<th>/home/stolle/Rubicon/proto/UnitDefinition.proto</th>
+<th>/home/stolle/ws25-optimizer-cpp/proto/UnitDefinition.proto</th>
+</tr><tr>
+<td><div>
+<pre>
+<span class="PreProc">syntax</span> = <span class="Constant">&quot;proto2&quot;</span>;
+
+<span class="Type DiffAdd">enum</span><span class="DiffAdd"> TcpPackageType {                                                                                                                               </span>
+<span class="DiffAdd">  UNDEFINED_PACKAGE_TYPE = </span><span class="Constant DiffAdd">0</span><span class="DiffAdd">;                                                                                                                       </span>
+<span class="DiffAdd">  WORK = </span><span class="Constant DiffAdd">1</span><span class="DiffAdd">;                                                                                                                                         </span>
+<span class="DiffAdd">  REROUTE_WORK = </span><span class="Constant DiffAdd">2</span><span class="DiffAdd">;                                                                                                                                 </span>
+<span class="DiffAdd">  TASK_FINISHED = </span><span class="Constant DiffAdd">3</span><span class="DiffAdd">;                                                                                                                                </span>
+<span class="DiffAdd">  TEXT = </span><span class="Constant DiffAdd">4</span><span class="DiffAdd">;                                                                                                                                         </span>
+<span class="DiffAdd">  UPDATE_UNIT_TYPE = </span><span class="Constant DiffAdd">5</span><span class="DiffAdd">;                                                                                                                             </span>
+<span class="DiffAdd">  QUERY_PLAN = </span><span class="Constant DiffAdd">6</span><span class="DiffAdd">;                                                                                                                                   </span>
+<span class="DiffAdd">  MONITOR_REQUEST = </span><span class="Constant DiffAdd">7</span><span class="DiffAdd">;                                                                                                                              </span>
+<span class="DiffAdd">  CONNECT_ACTION = </span><span class="Constant DiffAdd">8</span><span class="DiffAdd">;                                                                                                                               </span>
+<span class="DiffAdd">  CONNECT_ACTION_INFO = </span><span class="Constant DiffAdd">9</span><span class="DiffAdd">;                                                                                                                          </span>
+<span class="DiffAdd">  CONFIGURATION_ACTION = </span><span class="Constant DiffAdd">10</span><span class="DiffAdd">;                                                                                                                        </span>
+<span class="DiffAdd">  UUID_FOR_UNIT_REQUEST = </span><span class="Constant DiffAdd">11</span><span class="DiffAdd">;                                                                                                                       </span>
+<span class="DiffAdd">  UUID_FOR_UNIT_RESPONSE = </span><span class="Constant DiffAdd">12</span><span class="DiffAdd">;                                                                                                                      </span>
+<span class="DiffAdd">  UUID_COLLISION = </span><span class="Constant DiffAdd">13</span><span class="DiffAdd">;                                                                                                                              </span>
+<span class="DiffAdd">  PLAN_RESPONSE = </span><span class="Constant DiffAdd">14</span><span class="DiffAdd">;                                                                                                                               </span>
+<span class="DiffAdd">  QUERY_GROUP = </span><span class="Constant DiffAdd">15</span><span class="DiffAdd">;                                                                                                                                 </span>
+<span class="DiffAdd">  SERVER_CONFIGURATION = </span><span class="Constant DiffAdd">16</span><span class="DiffAdd">;                                                                                                                        </span>
+<span class="DiffAdd">  SERVER_CONFIGURATION_RESPONSE = </span><span class="Constant DiffAdd">17</span><span class="DiffAdd">;                                                                                                               </span>
+<span class="DiffAdd">}</span><span class="DiffAdd">                                                                                                                                                   </span>
+<span class="DiffAdd"> </span><span class="DiffAdd">                                                                                                                                                   </span>
+<span class="Type DiffAdd">enum</span><span class="DiffAdd"> UnitType {                                                                                                                                     </span>
+<span class="DiffAdd">  UNDEFINED_UNIT_TYPE = </span><span class="Constant DiffAdd">0</span><span class="DiffAdd">;                                                                                                                          </span>
+<span class="DiffAdd">  QUERY_PLANER = </span><span class="Constant DiffAdd">1</span><span class="DiffAdd">;                                                                                                                                 </span>
+<span class="DiffAdd">  COMPUTE_UNIT = </span><span class="Constant DiffAdd">2</span><span class="DiffAdd">;                                                                                                                                 </span>
+<span class="DiffAdd">  MEMORY_UNIT = </span><span class="Constant DiffAdd">3</span><span class="DiffAdd">;                                                                                                                                  </span>
+<span class="DiffAdd">  META_UNIT = </span><span class="Constant DiffAdd">4</span><span class="DiffAdd">;                                                                                                                                    </span>
+<span class="DiffAdd">  MONITOR_UNIT = </span><span class="Constant DiffAdd">5</span><span class="DiffAdd">;                                                                                                                                 </span>
+<span class="DiffAdd">  DATABASE_UNIT = </span><span class="Constant DiffAdd">6</span><span class="DiffAdd">;                                                                                                                                </span>
+<span class="DiffAdd">}</span><span class="DiffAdd">                                                                                                                                                   </span>
+<span class="DiffAdd"> </span><span class="DiffAdd">                                                                                                                                                   </span>
+<span class="Type">message</span> UnitDefinition {
+  <span class="Statement">optional</span> <span class="Type">uint32</span> unit_type = <span class="Constant">1</span> [<span class="Statement">default</span> = <span class="Constant">0</span>];
+  <span class="Statement">optional</span> <span class="Type">string</span> info = <span class="Constant">2</span>;
+  <span class="Statement">optional</span> <span class="Type">string</span> prettyName = <span class="Constant">3</span>;
+}
+</pre>
+</div></td>
+<td><div>
+<pre>
+<span class="PreProc">syntax</span> = <span class="Constant">&quot;proto2&quot;</span>;
+
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="Type">message</span> UnitDefinition {
+  <span class="Statement">optional</span> <span class="Type">uint32</span> unit_type = <span class="Constant">1</span> [<span class="Statement">default</span> = <span class="Constant">0</span>];
+  <span class="Statement">optional</span> <span class="Type">string</span> info = <span class="Constant">2</span>;
+  <span class="Statement">optional</span> <span class="Type">string</span> prettyName = <span class="Constant">3</span>;
+}
+</pre>
+</div></td>
+</tr>
+</table>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->
+

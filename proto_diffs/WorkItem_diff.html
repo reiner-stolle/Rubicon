@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>diff</title>
+<meta name="Generator" content="Vim/9.1">
+<meta name="plugin-version" content="vim9.0_v2">
+<meta name="settings" content="whole_filler,use_css,no_foldcolumn,prevent_copy=,use_input_for_pc=none">
+<meta name="colorscheme" content="none">
+<style>
+<!--
+pre { font-family: monospace; color: #000000; background-color: #ffffff; }
+body { font-family: monospace; color: #000000; background-color: #ffffff; }
+* { font-size: 1em; }
+.Folded { color: #0000c0; background-color: #a8a8a8; padding-bottom: 1px; }
+.Comment { color: #0000c0; }
+.Type { color: #008000; }
+.Statement { color: #af5f00; }
+.Constant { color: #c00000; }
+.DiffText { background-color: #ff6060; padding-bottom: 1px; font-weight: bold; }
+.DiffAdd { background-color: #5fd7ff; padding-bottom: 1px; }
+.DiffChange { background-color: #ffd7ff; padding-bottom: 1px; }
+.DiffDelete { color: #8080ff; background-color: #afffff; padding-bottom: 1px; }
+-->
+<!--
+table { table-layout: fixed; }
+html, body, table, tbody { width: 100%; margin: 0; padding: 0; }
+table, td, th { border: 1px solid; }
+td { vertical-align: top; }
+th, td { width: 50.0%; }
+td div { overflow: auto; }
+-->
+</style>
+</head>
+<body>
+<table id='vimCodeElement'>
+<tr>
+<th>/home/stolle/Rubicon/proto/WorkItem.proto</th>
+<th>/home/stolle/ws25-optimizer-cpp/proto/WorkItem.proto</th>
+</tr><tr>
+<td><div>
+<pre>
+<span class="Folded">+-- 32 lines: syntax = &quot;proto2&quot;;--------------------------------------------------------------------------------------------------------------------</span>
+  OP_MAP = <span class="Constant">9</span>;
+  OP_MATERIALIZE = <span class="Constant">10</span>; <span class="Comment">// Takes  bitmask/position list and a column --&gt; produces a column whose entries match the positions</span>
+  OP_GROUPBY = <span class="Constant">11</span>;
+  OP_RESULT = <span class="Constant">12</span>;
+}
+
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="Type">enum</span> AggFunc {
+  AGG_COUNT = <span class="Constant">1</span>;
+  AGG_SUM = <span class="Constant">2</span>;
+  AGG_MIN = <span class="Constant">3</span>;
+  AGG_MAX = <span class="Constant">4</span>;
+  AGG_AVG = <span class="Constant">5</span>;
+<span class="Folded">+-- 52 lines: }-------------------------------------------------------------------------------------------------------------------------------------</span>
+
+<span class="Type">message</span> FilterItem {
+  <span class="Statement">optional</span> ColumnMessage inputColumn = <span class="Constant">1</span>;
+  <span class="Statement">optional</span> ColumnMessage outputColumn = <span class="Constant">2</span>;
+  <span class="Statement">optional</span> CompType filterType = <span class="Constant">3</span>;
+  <span class="Statement">repeated</span> ScalarValue filterValue = <span class="Constant">4</span>;
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+}
+
+<span class="Type">message</span> MultiGroupItem {
+  <span class="Statement">repeated</span> ColumnMessage groupColumns = <span class="Constant">1</span>; <span class="Comment">// The columns are expected to be in the correct order</span>
+  <span class="Statement">optional</span> ColumnMessage outputIndex = <span class="Constant">2</span>;
+  <span class="Statement">optional</span> ColumnMessage outputClusters = <span class="Constant">3</span>;
+<span class="Folded">+--  5 lines: optional ColumnMessage aggregationColumn = 4; // If we should do a SUM-aggregation with these clusters--------------------------------</span>
+
+<span class="Type">message</span> JoinItem {
+  <span class="Statement">optional</span> ColumnMessage innerColumn = <span class="Constant">1</span>;
+  <span class="Statement">optional</span> ColumnMessage outerColumn = <span class="Constant">2</span>;
+  <span class="Statement">optional</span> ColumnMessage outputColumn = <span class="Constant">3</span>;
+  <span class="Statement">optional</span> CompType joinPredicate = <span class="Constant">9</span>;
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+}
+
+<span class="Type">message</span> AggItem {
+  <span class="Statement">optional</span> ColumnMessage inputColumn = <span class="Constant">1</span>;
+  <span class="Statement">optional</span> ColumnMessage outputColumn = <span class="Constant">2</span>;
+  <span class="Statement">optional</span> AggFunc aggFunc = <span class="Constant">3</span>;
+<span class="DiffChange">  </span><span class="Statement DiffChange">repeated</span><span class="DiffChange"> </span><span class="Type DiffChange">string</span><span class="DiffChange"> groupColumns = </span><span class="Constant DiffChange">4</span><span class="DiffChange">;</span><span class="DiffText">   </span><span class="Comment DiffText">// TODO: should use fully-qualified columns names</span><span class="DiffChange">                                                             </span>
+}
+
+<span class="Type">message</span> SortItem {
+  <span class="Statement">repeated</span> ColumnMessage inputColumns = <span class="Constant">1</span>;  <span class="Comment">// the i-th entry in sortColumns corresponds to the i-th entry in sortOrder</span>
+  <span class="Statement">repeated</span> <span class="Type">bool</span> sortOrder = <span class="Constant">2</span>;              <span class="Comment">// true indicates ascending, false descending order</span>
+  <span class="Statement">optional</span> ColumnMessage indexOutput = <span class="Constant">3</span>;   <span class="Comment">// The name of the manifested output index</span>
+<span class="Folded">+-- 30 lines: optional ColumnMessage existingIndex = 4; // If an existing index is provided, sort it and not the columns----------------------------</span>
+
+<span class="Type">message</span> ResultItem {
+  <span class="Statement">required</span> <span class="Type">string</span> filename = <span class="Constant">1</span>;
+  <span class="Statement">repeated</span> ColumnMessage resultColumns = <span class="Constant">2</span>;
+  <span class="Statement">repeated</span> <span class="Type">string</span> resultHeader = <span class="Constant">3</span>;
+  <span class="Statement">optional</span> ColumnMessage resultIndex = <span class="Constant">4</span>;
+<span class="DiffText">}</span><span class="DiffChange">                                                                                                                                                   </span>
+<span class="DiffChange"> </span><span class="DiffChange">                                                                                                                                                   </span>
+<span class="Type DiffAdd">message</span><span class="DiffAdd"> DataTransferItem {                                                                                                                          </span>
+<span class="DiffAdd">  </span><span class="Statement DiffAdd">optional</span><span class="DiffAdd"> ColumnMessage source = </span><span class="Constant DiffAdd">1</span><span class="DiffAdd">;                                                                                                                </span>
+<span class="DiffAdd">  </span><span class="Statement DiffAdd">optional</span><span class="DiffAdd"> ColumnMessage destination = </span><span class="Constant DiffAdd">2</span><span class="DiffAdd">;                                                                                                           </span>
+<span class="DiffAdd">  </span><span class="Statement DiffAdd">optional</span><span class="DiffAdd"> </span><span class="Type DiffAdd">double</span><span class="DiffAdd"> priority = </span><span class="Constant DiffAdd">3</span><span class="DiffAdd">;                                                                                                                     </span>
+<span class="DiffAdd">  </span><span class="Statement DiffAdd">optional</span><span class="DiffAdd"> </span><span class="Type DiffAdd">bool</span><span class="DiffAdd"> highPriority = </span><span class="Constant DiffAdd">4</span><span class="DiffAdd">;                                                                                                                   </span>
+<span class="DiffAdd">  </span><span class="Statement DiffAdd">optional</span><span class="DiffAdd"> </span><span class="Type DiffAdd">bool</span><span class="DiffAdd"> neededInLeave = </span><span class="Constant DiffAdd">5</span><span class="DiffAdd">;                                                                                                                  </span>
+}
+
+<span class="Type">message</span> WorkItem {
+  <span class="Statement">optional</span> <span class="Type">uint32</span> planId = <span class="Constant">1</span>;
+  <span class="Statement">optional</span> <span class="Type">uint32</span> itemId = <span class="Constant">2</span>;
+  <span class="Statement">optional</span> OperatorType operatorId = <span class="Constant">3</span>;
+<span class="Folded">+--  7 lines: optional bool printDebug = 4;---------------------------------------------------------------------------------------------------------</span>
+    MapItem mapData = <span class="Constant">10</span>;
+    MaterializeItem materializeData = <span class="Constant">11</span>;
+    SetOperationItem setData = <span class="Constant">12</span>;
+    FetchItem fetchData = <span class="Constant">13</span>;
+    MultiGroupItem multiGroupData = <span class="Constant">14</span>;
+    ResultItem resultData = <span class="Constant">15</span>;
+<span class="DiffAdd">    DataTransferItem transferData = </span><span class="Constant DiffAdd">16</span><span class="DiffAdd">;                                                                                                             </span>
+  }
+<span class="DiffChange">  </span><span class="Statement DiffChange">repeated</span><span class="DiffChange"> </span><span class="Type DiffChange">uint32</span><span class="DiffChange"> dependsOn = </span><span class="Constant DiffChange">1</span><span class="Constant DiffText">7</span><span class="DiffChange">;                                                                                                                   </span>
+<span class="DiffAdd">  </span><span class="Statement DiffAdd">optional</span><span class="DiffAdd"> </span><span class="Type DiffAdd">bool</span><span class="DiffAdd"> returnExtendedResult = </span><span class="Constant DiffAdd">18</span><span class="DiffAdd">;                                                                                                          </span>
+}
+</pre>
+</div></td>
+<td><div>
+<pre>
+<span class="Folded">+-- 32 lines: syntax = &quot;proto2&quot;;--------------------------------------------------------------------------------------------------------------------</span>
+  OP_MAP = <span class="Constant">9</span>;
+  OP_MATERIALIZE = <span class="Constant">10</span>; <span class="Comment">// Takes  bitmask/position list and a column --&gt; produces a column whose entries match the positions</span>
+  OP_GROUPBY = <span class="Constant">11</span>;
+  OP_RESULT = <span class="Constant">12</span>;
+}
+
+<span class="Type DiffAdd">enum</span><span class="DiffAdd"> StringOperation {                                                                                                                              </span>
+<span class="DiffAdd">  STR_LOWER = </span><span class="Constant DiffAdd">1</span><span class="DiffAdd">;                                                                                                                                    </span>
+<span class="DiffAdd">  STR_UPPER = </span><span class="Constant DiffAdd">2</span><span class="DiffAdd">;                                                                                                                                    </span>
+<span class="DiffAdd">}</span><span class="DiffAdd">                                                                                                                                                   </span>
+<span class="DiffAdd"> </span><span class="DiffAdd">                                                                                                                                                   </span>
+<span class="Type">enum</span> AggFunc {
+  AGG_COUNT = <span class="Constant">1</span>;
+  AGG_SUM = <span class="Constant">2</span>;
+  AGG_MIN = <span class="Constant">3</span>;
+  AGG_MAX = <span class="Constant">4</span>;
+  AGG_AVG = <span class="Constant">5</span>;
+<span class="Folded">+-- 52 lines: }-------------------------------------------------------------------------------------------------------------------------------------</span>
+
+<span class="Type">message</span> FilterItem {
+  <span class="Statement">optional</span> ColumnMessage inputColumn = <span class="Constant">1</span>;
+  <span class="Statement">optional</span> ColumnMessage outputColumn = <span class="Constant">2</span>;
+  <span class="Statement">optional</span> CompType filterType = <span class="Constant">3</span>;
+  <span class="Statement">repeated</span> ScalarValue filterValue = <span class="Constant">4</span>;
+<span class="DiffAdd">  </span><span class="Statement DiffAdd">repeated</span><span class="DiffAdd"> StringOperation stringOp = </span><span class="Constant DiffAdd">5</span><span class="DiffAdd">;                                                                                                            </span>
+<span class="DiffAdd">  </span><span class="Statement DiffAdd">optional</span><span class="DiffAdd"> ColumnMessage compareColumn = </span><span class="Constant DiffAdd">6</span><span class="DiffAdd">;  </span><span class="Comment DiffAdd">// For column-vs-column comparisons (e.g. post-join filters like ci.movie_id = mc.movie_id)</span><span class="DiffAdd">            </span>
+}
+
+<span class="Type">message</span> MultiGroupItem {
+  <span class="Statement">repeated</span> ColumnMessage groupColumns = <span class="Constant">1</span>; <span class="Comment">// The columns are expected to be in the correct order</span>
+  <span class="Statement">optional</span> ColumnMessage outputIndex = <span class="Constant">2</span>;
+  <span class="Statement">optional</span> ColumnMessage outputClusters = <span class="Constant">3</span>;
+<span class="Folded">+--  5 lines: optional ColumnMessage aggregationColumn = 4; // If we should do a SUM-aggregation with these clusters--------------------------------</span>
+
+<span class="Type">message</span> JoinItem {
+  <span class="Statement">optional</span> ColumnMessage innerColumn = <span class="Constant">1</span>;
+  <span class="Statement">optional</span> ColumnMessage outerColumn = <span class="Constant">2</span>;
+  <span class="Statement">optional</span> ColumnMessage outputColumn = <span class="Constant">3</span>;
+  <span class="Statement">optional</span> CompType joinPredicate = <span class="Constant">9</span>;
+<span class="DiffAdd">  </span><span class="Statement DiffAdd">optional</span><span class="DiffAdd"> </span><span class="Type DiffAdd">bool</span><span class="DiffAdd"> produceInnerOutput = </span><span class="Constant DiffAdd">10</span><span class="DiffAdd"> [</span><span class="Statement DiffAdd">default</span><span class="DiffAdd"> = </span><span class="Constant DiffAdd">true</span><span class="DiffAdd">];                                                                                           </span>
+<span class="DiffAdd">  </span><span class="Statement DiffAdd">optional</span><span class="DiffAdd"> </span><span class="Type DiffAdd">bool</span><span class="DiffAdd"> produceOuterOutput = </span><span class="Constant DiffAdd">11</span><span class="DiffAdd"> [</span><span class="Statement DiffAdd">default</span><span class="DiffAdd"> = </span><span class="Constant DiffAdd">true</span><span class="DiffAdd">];                                                                                           </span>
+}
+
+<span class="Type">message</span> AggItem {
+  <span class="Statement">optional</span> ColumnMessage inputColumn = <span class="Constant">1</span>;
+  <span class="Statement">optional</span> ColumnMessage outputColumn = <span class="Constant">2</span>;
+  <span class="Statement">optional</span> AggFunc aggFunc = <span class="Constant">3</span>;
+<span class="DiffChange">  </span><span class="Statement DiffChange">repeated</span><span class="DiffChange"> </span><span class="Type DiffChange">string</span><span class="DiffChange"> groupColumns = </span><span class="Constant DiffChange">4</span><span class="DiffChange">;                                                                                                                 </span>
+}
+
+<span class="Type">message</span> SortItem {
+  <span class="Statement">repeated</span> ColumnMessage inputColumns = <span class="Constant">1</span>;  <span class="Comment">// the i-th entry in sortColumns corresponds to the i-th entry in sortOrder</span>
+  <span class="Statement">repeated</span> <span class="Type">bool</span> sortOrder = <span class="Constant">2</span>;              <span class="Comment">// true indicates ascending, false descending order</span>
+  <span class="Statement">optional</span> ColumnMessage indexOutput = <span class="Constant">3</span>;   <span class="Comment">// The name of the manifested output index</span>
+<span class="Folded">+-- 30 lines: optional ColumnMessage existingIndex = 4; // If an existing index is provided, sort it and not the columns----------------------------</span>
+
+<span class="Type">message</span> ResultItem {
+  <span class="Statement">required</span> <span class="Type">string</span> filename = <span class="Constant">1</span>;
+  <span class="Statement">repeated</span> ColumnMessage resultColumns = <span class="Constant">2</span>;
+  <span class="Statement">repeated</span> <span class="Type">string</span> resultHeader = <span class="Constant">3</span>;
+  <span class="Statement">optional</span> ColumnMessage resultIndex = <span class="Constant">4</span>;
+<span class="DiffText">  </span><span class="Statement DiffText">optional</span><span class="DiffText"> </span><span class="Type DiffText">uint32</span><span class="DiffText"> limitCount = </span><span class="Constant DiffText">5</span><span class="DiffText">;</span><span class="DiffChange">                                                                                                                   </span>
+<span class="DiffText">  </span><span class="Statement DiffText">optional</span><span class="DiffText"> </span><span class="Type DiffText">uint32</span><span class="DiffText"> offsetCount = </span><span class="Constant DiffText">6</span><span class="DiffText"> [</span><span class="Statement DiffText">default</span><span class="DiffText"> = </span><span class="Constant DiffText">0</span><span class="DiffText">];</span><span class="DiffChange">                                                                                                    </span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+}
+
+<span class="Type">message</span> WorkItem {
+  <span class="Statement">optional</span> <span class="Type">uint32</span> planId = <span class="Constant">1</span>;
+  <span class="Statement">optional</span> <span class="Type">uint32</span> itemId = <span class="Constant">2</span>;
+  <span class="Statement">optional</span> OperatorType operatorId = <span class="Constant">3</span>;
+<span class="Folded">+--  7 lines: optional bool printDebug = 4;---------------------------------------------------------------------------------------------------------</span>
+    MapItem mapData = <span class="Constant">10</span>;
+    MaterializeItem materializeData = <span class="Constant">11</span>;
+    SetOperationItem setData = <span class="Constant">12</span>;
+    FetchItem fetchData = <span class="Constant">13</span>;
+    MultiGroupItem multiGroupData = <span class="Constant">14</span>;
+    ResultItem resultData = <span class="Constant">15</span>;
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+  }
+<span class="DiffChange">  </span><span class="Statement DiffChange">repeated</span><span class="DiffChange"> </span><span class="Type DiffChange">uint32</span><span class="DiffChange"> dependsOn = </span><span class="Constant DiffChange">1</span><span class="Constant DiffText">6</span><span class="DiffChange">;                                                                                                                   </span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+}
+</pre>
+</div></td>
+</tr>
+</table>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->
+

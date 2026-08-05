@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>diff</title>
+<meta name="Generator" content="Vim/9.1">
+<meta name="plugin-version" content="vim9.0_v2">
+<meta name="settings" content="whole_filler,use_css,no_foldcolumn,prevent_copy=,use_input_for_pc=none">
+<meta name="colorscheme" content="none">
+<style>
+<!--
+pre { font-family: monospace; color: #000000; background-color: #ffffff; }
+body { font-family: monospace; color: #000000; background-color: #ffffff; }
+* { font-size: 1em; }
+.Statement { color: #af5f00; }
+.PreProc { color: #c000c0; }
+.Type { color: #008000; }
+.Folded { color: #0000c0; background-color: #a8a8a8; padding-bottom: 1px; }
+.Comment { color: #0000c0; }
+.Constant { color: #c00000; }
+.DiffText { background-color: #ff6060; padding-bottom: 1px; font-weight: bold; }
+.DiffAdd { background-color: #5fd7ff; padding-bottom: 1px; }
+.DiffChange { background-color: #ffd7ff; padding-bottom: 1px; }
+.DiffDelete { color: #8080ff; background-color: #afffff; padding-bottom: 1px; }
+-->
+<!--
+table { table-layout: fixed; }
+html, body, table, tbody { width: 100%; margin: 0; padding: 0; }
+table, td, th { border: 1px solid; }
+td { vertical-align: top; }
+th, td { width: 50.0%; }
+td div { overflow: auto; }
+-->
+</style>
+</head>
+<body>
+<table id='vimCodeElement'>
+<tr>
+<th>/home/stolle/Rubicon/proto/NetworkRequests.proto</th>
+<th>/home/stolle/ws25-optimizer-cpp/proto/NetworkRequests.proto</th>
+</tr><tr>
+<td><div>
+<pre>
+<span class="PreProc">syntax</span> = <span class="Constant">&quot;proto2&quot;</span>;
+
+<span class="PreProc DiffAdd">import</span><span class="DiffAdd"> </span><span class="Constant DiffAdd">&quot;UnitDefinition.proto&quot;</span><span class="DiffAdd">;                                                                                                                      </span>
+<span class="DiffAdd"> </span><span class="DiffAdd">                                                                                                                                                   </span>
+<span class="Type">package</span> ddd.network;
+
+<span class="Type">enum</span> ActionType {
+  ACT_CONNECT = <span class="Constant">0</span>;
+  ACT_DISCONNECT = <span class="Constant">1</span>;
+}
+
+<span class="Type">enum</span> ConnectionType {
+  CONNECT_TCP = <span class="Constant">0</span>;
+  CONNECT_RDMA = <span class="Constant">1</span>;
+}
+
+<span class="Type DiffAdd">enum</span><span class="DiffAdd"> CallbackFunction {                                                                                                                             </span>
+<span class="DiffAdd">  FORWARD_CB = </span><span class="Constant DiffAdd">0</span><span class="DiffAdd">;                                                                                                                                   </span>
+<span class="DiffAdd">  QUERY_PLAN_CB = </span><span class="Constant DiffAdd">1</span><span class="DiffAdd">;                                                                                                                                </span>
+<span class="DiffAdd">}</span><span class="DiffAdd">                                                                                                                                                   </span>
+<span class="DiffAdd"> </span><span class="DiffAdd">                                                                                                                                                   </span>
+<span class="Type">message</span> ConnectItem {
+  <span class="Statement">required</span> <span class="Type">string</span> destinationIp = <span class="Constant">1</span>;
+  <span class="Statement">required</span> <span class="Type">uint32</span> port = <span class="Constant">2</span>;
+  <span class="Statement">required</span> ActionType action = <span class="Constant">3</span>;
+  <span class="Statement">required</span> ConnectionType connectionType = <span class="Constant">4</span>;
+}
+<span class="Folded">+--  9 lines: message ConnectInfo {-----------------------------------------------------------------------------------------------------------------</span>
+
+<span class="Type">message</span> UuidForUnitResponse {
+  <span class="Statement">required</span> <span class="Type">uint32</span> requestedUnitType = <span class="Constant">1</span>;
+  <span class="Statement">repeated</span> <span class="Type">uint64</span> uuids = <span class="Constant">2</span>;
+  <span class="Statement">repeated</span> <span class="Type">string</span> names = <span class="Constant">3</span>;
+}
+<span class="DiffAdd"> </span><span class="DiffAdd">                                                                                                                                                   </span>
+<span class="Type DiffAdd">message</span><span class="DiffAdd"> CallbackChangeRequest {                                                                                                                     </span>
+<span class="DiffAdd">  </span><span class="Statement DiffAdd">required</span><span class="DiffAdd"> TcpPackageType packageType = </span><span class="Constant DiffAdd">1</span><span class="DiffAdd">;                                                                                                          </span>
+<span class="DiffAdd">  </span><span class="Statement DiffAdd">required</span><span class="DiffAdd"> CallbackFunction callbackFunction = </span><span class="Constant DiffAdd">2</span><span class="DiffAdd">;                                                                                                   </span>
+<span class="DiffAdd">}</span><span class="DiffAdd">                                                                                                                                                   </span>
+<span class="DiffAdd"> </span><span class="DiffAdd">                                                                                                                                                   </span>
+<span class="Type DiffAdd">message</span><span class="DiffAdd"> ServerConfigurationRequest {                                                                                                                </span>
+<span class="DiffAdd">  </span><span class="Statement DiffAdd">optional</span><span class="DiffAdd"> CallbackChangeRequest callbackChange = </span><span class="Constant DiffAdd">1</span><span class="DiffAdd">;                                                                                                </span>
+<span class="DiffAdd">  </span><span class="Statement DiffAdd">optional</span><span class="DiffAdd"> </span><span class="Type DiffAdd">uint64</span><span class="DiffAdd"> windowSizeMs = </span><span class="Constant DiffAdd">2</span><span class="DiffAdd">; </span><span class="Comment DiffAdd">// The new windowSize for the grouping (if used) in milliseconds</span><span class="DiffAdd">                                                </span>
+<span class="DiffAdd">  </span><span class="Statement DiffAdd">optional</span><span class="DiffAdd"> </span><span class="Type DiffAdd">uint64</span><span class="DiffAdd"> threshold = </span><span class="Constant DiffAdd">3</span><span class="DiffAdd">;  </span><span class="Comment DiffAdd">// Threshold how often a column must be used in the group to be transferred --&gt; currently static threshold but will be adapted into more complex cost function in the future</span>
+<span class="DiffAdd">  </span><span class="Statement DiffAdd">optional</span><span class="DiffAdd"> </span><span class="Type DiffAdd">float</span><span class="DiffAdd"> maxOverhead = </span><span class="Constant DiffAdd">4</span><span class="DiffAdd">; </span><span class="Comment DiffAdd">// Used for the grouping algorithm --&gt; 1.5 would mean a plan is integrated in adds at max 50% columns to the group</span>
+<span class="DiffAdd">}</span><span class="DiffAdd">                                                                                                                                                   </span>
+<span class="DiffAdd"> </span><span class="DiffAdd">                                                                                                                                                   </span>
+<span class="Type DiffAdd">message</span><span class="DiffAdd"> ServerConfigurationResponse {                                                                                                               </span>
+<span class="DiffAdd">  </span><span class="Statement DiffAdd">required</span><span class="DiffAdd"> </span><span class="Type DiffAdd">bool</span><span class="DiffAdd"> success = </span><span class="Constant DiffAdd">1</span><span class="DiffAdd">;                                                                                                                        </span>
+<span class="DiffAdd">}</span><span class="DiffAdd">                                                                                                                                                   </span>
+</pre>
+</div></td>
+<td><div>
+<pre>
+<span class="PreProc">syntax</span> = <span class="Constant">&quot;proto2&quot;</span>;
+
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="Type">package</span> ddd.network;
+
+<span class="Type">enum</span> ActionType {
+  ACT_CONNECT = <span class="Constant">0</span>;
+  ACT_DISCONNECT = <span class="Constant">1</span>;
+}
+
+<span class="Type">enum</span> ConnectionType {
+  CONNECT_TCP = <span class="Constant">0</span>;
+  CONNECT_RDMA = <span class="Constant">1</span>;
+}
+
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="Type">message</span> ConnectItem {
+  <span class="Statement">required</span> <span class="Type">string</span> destinationIp = <span class="Constant">1</span>;
+  <span class="Statement">required</span> <span class="Type">uint32</span> port = <span class="Constant">2</span>;
+  <span class="Statement">required</span> ActionType action = <span class="Constant">3</span>;
+  <span class="Statement">required</span> ConnectionType connectionType = <span class="Constant">4</span>;
+}
+<span class="Folded">+--  9 lines: message ConnectInfo {-----------------------------------------------------------------------------------------------------------------</span>
+
+<span class="Type">message</span> UuidForUnitResponse {
+  <span class="Statement">required</span> <span class="Type">uint32</span> requestedUnitType = <span class="Constant">1</span>;
+  <span class="Statement">repeated</span> <span class="Type">uint64</span> uuids = <span class="Constant">2</span>;
+  <span class="Statement">repeated</span> <span class="Type">string</span> names = <span class="Constant">3</span>;
+}
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+<span class="DiffDelete">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
+</pre>
+</div></td>
+</tr>
+</table>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->
+
