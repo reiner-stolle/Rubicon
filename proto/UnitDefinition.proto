@@ -29,6 +29,7 @@ enum UnitType {
   META_UNIT = 4;
   MONITOR_UNIT = 5;
   DATABASE_UNIT = 6;
+  OPTIMIZER_UNIT = 7;
 }
 
 message UnitDefinition {
