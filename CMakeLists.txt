@@ -77,12 +77,14 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(nlohmann_json)
 
 # ── Protobuf ────────────────────────────────────────────────
-find_package(Protobuf REQUIRED)
+find_package(Protobuf 3.0 REQUIRED)
 
 # Where your .proto files live
 set(PROTO_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/proto)
+
 # Where generated .pb.h / .pb.cc will be placed
 set(PROTO_GEN_DIR ${CMAKE_BINARY_DIR}/proto)
+
 file(MAKE_DIRECTORY ${PROTO_GEN_DIR})
 
 # Collect all .proto files
@@ -91,10 +93,17 @@ file(GLOB PROTO_FILES "${PROTO_SRC_DIR}/*.proto")
 # Generate C++ sources from each .proto
 set(PROTO_GENERATED_SRCS "")
 set(PROTO_GENERATED_HDRS "")
+
 foreach(PROTO_FILE ${PROTO_FILES})
     get_filename_component(PROTO_NAME ${PROTO_FILE} NAME_WE)
-    list(APPEND PROTO_GENERATED_SRCS "${PROTO_GEN_DIR}/${PROTO_NAME}.pb.cc")
-    list(APPEND PROTO_GENERATED_HDRS "${PROTO_GEN_DIR}/${PROTO_NAME}.pb.h")
+
+    list(APPEND PROTO_GENERATED_SRCS
+        "${PROTO_GEN_DIR}/${PROTO_NAME}.pb.cc"
+    )
+
+    list(APPEND PROTO_GENERATED_HDRS
+        "${PROTO_GEN_DIR}/${PROTO_NAME}.pb.h"
+    )
 endforeach()
 
 add_custom_command(
@@ -104,16 +113,23 @@ add_custom_command(
         -I${PROTO_SRC_DIR}
         ${PROTO_FILES}
     DEPENDS ${PROTO_FILES}
-    COMMENT "Generating protobuf C++ sources in ${PROTO_GEN_DIR}"
+    COMMENT "Generating protobuf C++ sources"
 )
 
 # Library target so the generated code is compiled once and linkable
-add_library(proto_lib STATIC ${PROTO_GENERATED_SRCS} ${PROTO_GENERATED_HDRS})
-target_include_directories(proto_lib PUBLIC ${PROTO_GEN_DIR})
-target_link_libraries(proto_lib PUBLIC ${Protobuf_LIBRARIES})
-target_include_directories(proto_lib PUBLIC ${Protobuf_INCLUDE_DIRS})
-# ────────────────────────────────────────────────────────────
+add_library(proto_lib STATIC
+    ${PROTO_GENERATED_SRCS}
+    ${PROTO_GENERATED_HDRS}
+)
 
+target_include_directories(proto_lib PUBLIC
+    ${PROTO_GEN_DIR}
+)
+
+target_link_libraries(proto_lib PUBLIC
+    protobuf::libprotobuf
+)
+# ────────────────────────────────────────────────────────────
 
 add_executable(optimizer-unit
     "${OPTIMIZER_DIR}/code/examples/OptimizerUnit.cpp"
@@ -125,17 +141,17 @@ add_executable(optimizer-unit
 
 # add_executable(optimizer-compute-unit "${CMAKE_CURRENT_SOURCE_DIR}/code/examples/ComputeUnit.cpp" ${PROJECT_SRC} ${PROJECT_HEADERS} code/include/optimizer/Logger.hpp)
 
-find_package(Protobuf 3.0 REQUIRED)
+# find_package(Protobuf 3.0 REQUIRED)
 
-if(TARGET protobuf::libprotobuf)
-    set(PROTOBUF_LIB protobuf::libprotobuf)
-elseif(TARGET protobuf::libprotobuf-lite)
-    set(PROTOBUF_LIB protobuf::libprotobuf-lite)
-elseif(Protobuf_LIBRARIES)
-    set(PROTOBUF_LIB ${Protobuf_LIBRARIES})
-else()
-    message(FATAL_ERROR "Could not find Protobuf library.")
-endif()
+# if(TARGET protobuf::libprotobuf)
+#     set(PROTOBUF_LIB protobuf::libprotobuf)
+# elseif(TARGET protobuf::libprotobuf-lite)
+#     set(PROTOBUF_LIB protobuf::libprotobuf-lite)
+# elseif(Protobuf_LIBRARIES)
+#     set(PROTOBUF_LIB ${Protobuf_LIBRARIES})
+# else()
+#     message(FATAL_ERROR "Could not find Protobuf library.")
+# endif()
 
 # set(ALL_TARGETS optimizer-server optimizer-unit optimizer-compute-unit)
 target_include_directories(optimizer-unit PUBLIC
