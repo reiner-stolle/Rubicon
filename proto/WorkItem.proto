@@ -36,6 +36,11 @@ enum OperatorType {
   OP_RESULT = 12;
 }
 
+enum StringOperation {
+  STR_LOWER = 1;
+  STR_UPPER = 2;
+}
+
 enum AggFunc {
   AGG_COUNT = 1;
   AGG_SUM = 2;
@@ -100,6 +105,8 @@ message FilterItem {
   optional ColumnMessage outputColumn = 2;
   optional CompType filterType = 3;
   repeated ScalarValue filterValue = 4;
+  repeated StringOperation stringOp = 5;
+  optional ColumnMessage compareColumn = 6;  // For column-vs-column comparisons (e.g. post-join filters like ci.movie_id = mc.movie_id)
 }
 
 message MultiGroupItem {
@@ -117,6 +124,8 @@ message JoinItem {
   optional ColumnMessage outerColumn = 2;
   optional ColumnMessage outputColumn = 3;
   optional CompType joinPredicate = 9;
+  optional bool produceInnerOutput = 10 [default = true];
+  optional bool produceOuterOutput = 11 [default = true];
 }
 
 message AggItem {
@@ -166,6 +175,8 @@ message ResultItem {
   repeated ColumnMessage resultColumns = 2;
   repeated string resultHeader = 3;
   optional ColumnMessage resultIndex = 4;
+  optional uint32 limitCount = 5;
+  optional uint32 offsetCount = 6 [default = 0];
 }
 
 message DataTransferItem {
