@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
     auto updateUnitInfo_cb = [&client, chores](TCPMetaInfo *meta, void *data, size_t len) -> void {
         LOG_INFO("UpdateUnitInfo Callback invoked");
         UnitDefinition unit;
-        unit.set_unit_type(static_cast<uint32_t>(UnitType::OPTIMIZER_UNIT));
+        unit.set_unit_type(static_cast<uint32_t>(UnitType::QUERY_PLANER));
 
         TCPMetaInfo info;
         info.package_type = TcpPackageType::UPDATE_UNIT_TYPE;
@@ -101,6 +101,14 @@ int main(int argc, char *argv[]) {
         void *out_mem = malloc(sizeof(TCPMetaInfo) + info.payload_size);
 
         const size_t message_size = tuddbs::Utility::serializeItemToMemory(out_mem, unit, info);
+
+        // // TESTING
+        std::cout << "[OPTIMIZER] SENDING"
+          << " package=" << TcpPackageType_Name(info.package_type)
+          << " src=" << info.src_uuid
+          << " tgt=" << info.tgt_uuid
+          << " payload=" << info.payload_size
+          << std::endl;
 
         client.notifyHost(out_mem, message_size);
         free(out_mem);
