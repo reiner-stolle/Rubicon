@@ -177,12 +177,19 @@ int main(int argc, char* argv[]) {
         plan::PlanDAG dag(std::move(plan), meta);
         dag.build();
 
-        // Commented out to provide a dot file
-        // std::shared_lock lock(collectionMutex);
-        // collectionManager->add_dag(std::move(dag));
+        VLOG("[Query_Plan_Cb] PlanDAG built successfully.");
 
-        std::ofstream out("dag.dot");
-        dag.exportDot(out);
+        VLOG("[Query_Plan_Cb] Adding DAG to collection manager...");
+
+        // Commented this and uncomment the two other lines to provide a dot file
+        // important that the two lines below are off when actually using the system
+        std::shared_lock lock(collectionMutex);
+        collectionManager->add_dag(std::move(dag));
+
+        VLOG("[Query_Plan_Cb] DAG added to collection manager.");
+
+        // std::ofstream out("dag.dot");
+        // dag.exportDot(out);
 
     };
 
@@ -240,7 +247,7 @@ int main(int argc, char* argv[]) {
 
     server.addCallback(TcpPackageType::TEXT, text_cb);
     server.addCallback(TcpPackageType::WORK, forward_cb);
-    server.addCallback(TcpPackageType::QUERY_PLAN, forward_cb);
+    server.addCallback(TcpPackageType::QUERY_PLAN, query_plan_cb);
     server.addCallback(TcpPackageType::REROUTE_WORK, reroute_work_cb);
     server.addCallback(TcpPackageType::TASK_FINISHED, forward_cb);
     server.addCallback(TcpPackageType::MONITOR_REQUEST, monitor_cb);
