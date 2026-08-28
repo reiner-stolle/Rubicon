@@ -162,9 +162,18 @@ void QueryManager::processQuery(std::shared_ptr<QueryContext> ctx) {
 void QueryManager::sendQueryPlan(const std::shared_ptr<PhysicalPlanNode>& physical_plan) {
 
     WorkRequest workRequest;
+
     workRequest.mutable_queryplan()->CopyFrom(createQueryPlan(physical_plan));
+    
+    // Added LOG
+    LOG_INFO(
+        std::string("[DEBUG][OPTIMIZER] Sending query plan with ")
+        + std::to_string(workRequest.queryplan().planitems_size())
+        + " plan items"
+    );
+    
     tuddbs::TCPMetaInfo info;
-    info.package_type = TcpPackageType::WORK;
+    info.package_type = TcpPackageType::QUERY_PLAN;
     info.payload_size = workRequest.ByteSizeLong();
     info.src_uuid = client->getUuid();
     void *out_mem = malloc(sizeof(tuddbs::TCPMetaInfo) + info.payload_size);
