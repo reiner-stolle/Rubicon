@@ -148,8 +148,16 @@ inline std::vector<WorkItem> crateWorkItems(const std::shared_ptr<PhysicalPlanNo
                 if (n->base_columns.size() >= 2) {
                     columnToProto(n->base_columns[1], filter_item->mutable_comparecolumn());
                 } else {
-                    for (auto val: n->expression.values) {
-                        filter_item->add_filtervalue()->mutable_stringval()->set_value(val);
+                    for (auto val : n->expression.values) {
+                        auto filterValue = filter_item->add_filtervalue();
+
+                        if (n->base_columns[0].type == PlanColumnType::INTEGER) {
+                            filterValue->mutable_intval()->set_value(std::stoull(val));
+                        } else if (n->base_columns[0].type == PlanColumnType::FLOAT) {
+                            filterValue->mutable_floatval()->set_value(std::stod(val));
+                        } else {
+                            filterValue->mutable_stringval()->set_value(val);
+                        }
                     }
                     // Handle StringOperation (UPPER/LOWER)
                     if (n->expression.string_op.has_value()) {
