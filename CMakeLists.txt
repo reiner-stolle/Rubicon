@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 3.20)
 project(DisaggSIMDProcessor LANGUAGES CXX)
 
 
+# CMAKE syntax for me (delete later)
+# 
+
+
+
+
 # Set Standard
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED On)
@@ -10,49 +16,59 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${warnings}")
 set(OPTIMIZE_OPTIONS -O3 -g)
 set(CMAKE_VERBOSE_MAKEFILE On)
 
+# Utilize Line 9
 add_compile_options("${OPTIMIZE_OPTIONS}")
 
+# Find Library and store it as the Variable
 find_library(PTHREAD_LIB pthread REQUIRED)
 find_library(NUMA_LIB numa REQUIRED)
 
-# Optimizer Append
+# Include Fetch Commands and the C Test Library
 include(FetchContent)
 include(CTest)
 
+# Set Macro Usage of the Optimizer use Rubicon as the original source
 set(OPTIMIZER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ws25-optimizer-cpp/cpp")
 
+# Reuse the build structure of the optimizer. Executables go here.
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
+# For Debuging, library type
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
+
+# Inlucde hyrise_sql parser from optimizer and populate it
 FetchContent_Declare(hyrise_sqlparser GIT_REPOSITORY https://github.com/hyrise/sql-parser.git GIT_TAG main)
 FetchContent_Populate(hyrise_sqlparser)
 set(SQLPARSER_INCLUDE_DIR "${hyrise_sqlparser_SOURCE_DIR}/src")
+# Searches recursively for .cpp files and stores them in SQLPARSER_SRC 
 file(GLOB_RECURSE SQLPARSER_SRC "${SQLPARSER_INCLUDE_DIR}/*.cpp")
 
 add_library(sql-parser STATIC
     ${SQLPARSER_SRC}
 )
 
-target_include_directories(sql-parser PUBLIC
-    "${SQLPARSER_INCLUDE_DIR}"
-)
 
-# old
-# add_library(sql-parser STATIC ${SQLPARSER_SRC} code/include/optimizer/Logger.hpp)
+# Check if this is redundant
+# target_include_directories(sql-parser PUBLIC
+#     "${SQLPARSER_INCLUDE_DIR}"
+# )
 
+# Include the Graphviz library for visualization
 find_program(GRAPHVIZ_DOT NAMES dot)
 if(NOT GRAPHVIZ_DOT)
   message(WARNING "Graphviz (dot) not found. Please install it.")
 endif()
 
+# Include abseil
 FetchContent_Declare(abseil GIT_REPOSITORY https://github.com/abseil/abseil-cpp.git GIT_TAG 20240722.0)
 set(ABSL_PROPAGATE_CXX_STD ON)
 FetchContent_MakeAvailable(abseil)
 
+# GLOB Definitions  ────────────────────────────────────────
 file(GLOB_RECURSE OPTIMIZER_SRC
     CONFIGURE_DEPENDS
     "${OPTIMIZER_DIR}/code/src/*.[cC][cC]*"
@@ -64,10 +80,7 @@ file(GLOB_RECURSE OPTIMIZER_HEADERS
     "${OPTIMIZER_DIR}/code/include/*.[hH]*"
 )
 
-
-# add_executable(optimizer-server "${CMAKE_CURRENT_SOURCE_DIR}/code/examples/tcp_server_example.cpp" ${PROJECT_SRC} ${PROJECT_HEADERS} code/include/optimizer/Logger.hpp)
-# add_executable(optimizer-unit "${OPTIMIZER_DIR}/code/examples/OptimizerUnit.cpp" ${PROJECT_SRC} ${PROJECT_HEADERS} code/include/optimizer/QueryManager.hpp code/src/optimizer/QueryManager.cpp code/include/optimizer/Logger.hpp)
-
+# Fetch nlohmann repo
 FetchContent_Declare(
     nlohmann_json
     GIT_REPOSITORY https://github.com/nlohmann/json.git
@@ -76,6 +89,8 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(nlohmann_json)
 
+
+# This part is unchanged from Rubicon
 # ── Protobuf ────────────────────────────────────────────────
 find_package(Protobuf 3.0 REQUIRED)
 
@@ -131,6 +146,8 @@ target_link_libraries(proto_lib PUBLIC
 )
 # ────────────────────────────────────────────────────────────
 
+
+# Add optimizer unit after Protobuf declaration
 add_executable(optimizer-unit
     "${OPTIMIZER_DIR}/code/examples/OptimizerUnit.cpp"
     ${OPTIMIZER_SRC}
@@ -138,22 +155,7 @@ add_executable(optimizer-unit
     ${OPTIMIZER_HEADERS}
 )
 
-
-# add_executable(optimizer-compute-unit "${CMAKE_CURRENT_SOURCE_DIR}/code/examples/ComputeUnit.cpp" ${PROJECT_SRC} ${PROJECT_HEADERS} code/include/optimizer/Logger.hpp)
-
-# find_package(Protobuf 3.0 REQUIRED)
-
-# if(TARGET protobuf::libprotobuf)
-#     set(PROTOBUF_LIB protobuf::libprotobuf)
-# elseif(TARGET protobuf::libprotobuf-lite)
-#     set(PROTOBUF_LIB protobuf::libprotobuf-lite)
-# elseif(Protobuf_LIBRARIES)
-#     set(PROTOBUF_LIB ${Protobuf_LIBRARIES})
-# else()
-#     message(FATAL_ERROR "Could not find Protobuf library.")
-# endif()
-
-# set(ALL_TARGETS optimizer-server optimizer-unit optimizer-compute-unit)
+# Target Include directories
 target_include_directories(optimizer-unit PUBLIC
     ${OPTIMIZER_DIR}/code/include
     ${PROTO_GEN_DIR}
@@ -169,7 +171,7 @@ target_link_libraries(optimizer-unit PRIVATE
 )
 
 
-
+# MSVC - microsoft visual c++
 if(MSVC)
     target_compile_options(optimizer-unit PRIVATE /W4 /permissive-)
 else()
@@ -179,21 +181,13 @@ endif()
 
 target_include_directories(sql-parser PUBLIC ${SQLPARSER_INCLUDE_DIR})
 
+# googletest
 if (BUILD_TESTING)
   FetchContent_Declare(googletest GIT_REPOSITORY https://github.com/google/googletest.git GIT_TAG v1.17.0)
   FetchContent_MakeAvailable(googletest)
   enable_testing()
 
-#   add_executable(optimizer-tests
-#           ${OPTIMIZER_DIR}/code/tests/test_sql_parser.cpp
-#           ${OPTIMIZER_DIR}/code/tests/test_sql_to_logical_plan_translator.cpp
-#           ${OPTIMIZER_DIR}/code/tests/test_json_to_logical_plan_translator.cpp
-#           ${OPTIMIZER_DIR}/code/tests/test_physical_optimizer.cpp
-#           ${PROJECT_SRC}
-#           ${PROJECT_HEADERS}
-#           code/include/optimizer/Logger.hpp
-#   )
-
+# testing
 add_executable(optimizer-tests
     "${OPTIMIZER_DIR}/code/tests/test_sql_parser.cpp"
     "${OPTIMIZER_DIR}/code/tests/test_sql_to_logical_plan_translator.cpp"
@@ -222,10 +216,10 @@ target_link_libraries(optimizer-tests PRIVATE
           nlohmann_json::nlohmann_json
 )
 
+
 include(GoogleTest)
   gtest_discover_tests(optimizer-tests)
 endif()
-
 
 
 set(EXT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext)
@@ -235,6 +229,7 @@ add_subdirectory("ext/SIMDOperators")
 
 # Default log level, overridable via -DLOG_LEVEL=LOG_DEBUG1
 set(LOG_LEVEL "LOG_INFO" CACHE STRING "Default log level")
+
 
 # ── computeUnit ─────────────────────────────────────────────
 set(CU_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/computeUnit/src)
