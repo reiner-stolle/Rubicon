@@ -89,6 +89,18 @@ class MaterializeOperator : public AbstractOperator {
 
         column->wait_data_allocated();
         idx->wait_data_allocated();
+
+        std::cerr << "[MATERIALIZE DEBUG] column elements="
+          << column->elements
+          << " idx elements="
+          << idx->elements
+          << " column data="
+          << column->data
+          << " idx data="
+          << idx->data
+          << std::endl;
+
+
         View chunkCol = View<base_t>(static_cast<base_t*>(column->data), column->elements, column);
         View chunkIdx = View<size_t>(static_cast<size_t*>(idx->data), idx->elements, idx);
 

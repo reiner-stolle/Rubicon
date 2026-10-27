@@ -147,6 +147,9 @@ class FilterOperator : public AbstractOperator {
 
         std::shared_ptr<Column> resColumn = std::make_shared<Column>(0, DataType::unknown, size_in_bytes, offset, false, true);
 
+        LOG_DEBUG1("[FilterOperator] My result has "
+           << resColumn->elements << " elements." << std::endl;)
+
         if constexpr (FilterImpl::ProducesBitmask) {
             LOG_DEBUG1("[FilterOperator::doFilter] Producing Bitmask" << std::endl;)
             resColumn->datatype = DataType::bitmask;
@@ -191,6 +194,9 @@ class FilterOperator : public AbstractOperator {
             LOG_WARNING("[FilterOperator::doActualInFilter] No entries match the filter predicates. Creating an empty column." << std::endl;)
             // TODO: How to handle empty result?
             std::shared_ptr<Column> resColumn = std::make_shared<Column>(0, DataType::unknown, 0, 0, false, true);
+            
+            
+            
             DataCatalog::getInstance().addColumn(filterData.outputcolumn().tabname(), filterData.outputcolumn().colname(), resColumn);
             return 0;
         }
