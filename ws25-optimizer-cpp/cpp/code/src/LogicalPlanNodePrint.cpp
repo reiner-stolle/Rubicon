@@ -115,13 +115,22 @@ static void printColumns(const std::vector<Column> &cols, int depth, const char 
 {
     if (cols.empty())
         return;
+
     indent(depth);
     std::cout << label << ":\n";
+
     for (const auto &c : cols)
     {
         indent(depth + 1);
+
+        std::cout << formatColumn(c);
+
+        if (c.base_table)
+            std::cout << " [base=" << *c.base_table << "]";
+
         if (c.alias)
             std::cout << " AS " << *c.alias;
+
         std::cout << "\n";
     }
 }

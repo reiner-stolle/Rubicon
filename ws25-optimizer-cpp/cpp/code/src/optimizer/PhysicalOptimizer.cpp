@@ -327,8 +327,10 @@ TransformResult PhysicalOptimizer::handleJoin(
     TransformResult left_result = transformNode(logical_node->children[0], context);
     TransformResult right_result = transformNode(logical_node->children[1], context);
 
-    std::string left_join_col_table = logical_node->base_columns[0].table_name;
-    std::string right_join_col_table = logical_node->base_columns[1].table_name;
+    std::string left_join_col_table =
+        logical_node->base_columns[0].getBaseTableName();
+    std::string right_join_col_table =
+        logical_node->base_columns[1].getBaseTableName();
     
     // Step 2: Materialize join keys using ensureMaterialized, which handles chaining if needed
     Column left_join_col = logical_node->base_columns[0];

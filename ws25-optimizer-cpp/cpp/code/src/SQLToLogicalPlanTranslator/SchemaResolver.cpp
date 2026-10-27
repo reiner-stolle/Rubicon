@@ -6,7 +6,7 @@
 const std::vector<std::pair<std::string, std::string>> kPrefixToTable = {
     // SSB
     {"lo_", "lineorder"},
-    {"d_", "dates"},
+    {"d_", "date"},
     {"c_", "customer"},
     {"s_", "supplier"},
     {"p_", "part"},
@@ -37,15 +37,15 @@ std::string resolveTableName(const Column &col)
 
 const std::unordered_map<std::string, SSBTableSchema> kSSBSchema = {
     {"date",
-     {{"d_datekey", "d_year", "d_yearmonth", "d_yearmonthnum",
+     {{"d_datekey", "d_year", "d_yearmonthnum",
        "d_quarter", "d_quarternum", "d_month", "d_monthnum",
-       "d_weeknum", "d_daynum", "d_daynumofweek", "d_daynumofyear"},
+       "d_weeknuminyear", "d_daynum", "d_daynumofweek", "d_daynumofyear"},
       PlanColumnType::INTEGER,
       PlanColumnType::STRING}},
     {"customer",
-     {{"c_custkey", "c_nationkey", "c_regionkey", "c_mktsegment"},
-      PlanColumnType::STRING,
-      PlanColumnType::INTEGER}},
+     {{"c_custkey", "c_nationkey", "c_regionkey"},
+      PlanColumnType::INTEGER,
+      PlanColumnType::STRING}},
     {"supplier",
      {{"s_suppkey", "s_nationkey", "s_regionkey"},
       PlanColumnType::INTEGER,

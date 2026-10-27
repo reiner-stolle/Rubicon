@@ -72,8 +72,18 @@ inline AggFunc aggFuncToProto(PlanAggFunc t) {
 
 inline void columnToProto(const Column &column, ColumnMessage *output_column) {
     output_column->set_colname(column.column_name);
-    output_column->set_tabname(column.getBaseTableName());
+
+    // Base columns must use the actual physical table name.
+    // Intermediate/generated columns must keep their own table name
+    // (usually ""), otherwise e.g. ".i123" becomes "lineorder.i123".
+    if (column.is_base.value_or(false)) {
+        output_column->set_tabname(column.getBaseTableName());
+    } else {
+        output_column->set_tabname(column.table_name);
+    }
+
     output_column->set_coltype(columnTypeToProto(column.type));
+
     if (column.is_base.has_value()) {
         output_column->set_isbase(column.is_base.value());
     }

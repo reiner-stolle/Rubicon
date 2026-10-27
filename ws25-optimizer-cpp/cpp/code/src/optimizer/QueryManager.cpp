@@ -5,6 +5,7 @@
 #include "WorkRequest.pb.h"
 #include "optimizer/Logger.hpp"
 #include "UnitDefinition.pb.h"
+#include "LogicalPlanNode.hpp"
 
 size_t now() {
     return std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -128,6 +129,9 @@ void QueryManager::processQuery(std::shared_ptr<QueryContext> ctx) {
         }
 
         ctx->logical_plan = logical_plans[0];
+        std::cout << "\n===== LOGICAL PLAN BEFORE PHYSICAL OPTIMIZATION =====\n";
+        printLogicalPlan(*ctx->logical_plan);
+        std::cout << "=====================================================\n";
         size_t phys_start = now();
         if (!query_name.empty()) {
             PhysicalOptimizer optimizer(ctx->logical_plan, optimize_chains, optimize_join_outputs, query_name, demo, current_vis_nr);
@@ -162,14 +166,36 @@ void QueryManager::processQuery(std::shared_ptr<QueryContext> ctx) {
 void QueryManager::sendQueryPlan(const std::shared_ptr<PhysicalPlanNode>& physical_plan) {
 
     WorkRequest workRequest;
-
-    workRequest.mutable_queryplan()->CopyFrom(createQueryPlan(physical_plan));
     
-    // Added LOG
+    // Added Debug, Line 182 was there before 
+    auto queryPlan = createQueryPlan(physical_plan);
+
+    for (const auto& item : queryPlan.planitems()) {
     LOG_INFO(
-        std::string("[DEBUG][OPTIMIZER] Sending query plan with ")
-        + std::to_string(workRequest.queryplan().planitems_size())
-        + " plan items"
+        std::string("[DEBUG][OPTIMIZER] WorkItem before serialization:\n")
+        + item.DebugString()
+    );
+
+    LOG_INFO(
+        std::string("[DEBUG][OPTIMIZER] operatorId=")
+        + std::to_string(item.operatorid())
+        + " opDataCase="
+        + std::to_string(item.opData_case())
+        );
+    }
+
+    workRequest.mutable_queryplan()->CopyFrom(queryPlan);
+
+    LOG_INFO(
+    std::string("[DEBUG][OPTIMIZER] WorkRequest before serialization:\n")
+    + workRequest.DebugString()
+    );
+
+    // workRequest.mutable_queryplan()->CopyFrom(createQueryPlan(physical_plan));
+    LOG_INFO(
+    std::string("[DEBUG][OPTIMIZER] Sending query plan with ")
+    + std::to_string(workRequest.queryplan().planitems_size())
+    + " plan items"
     );
     
     tuddbs::TCPMetaInfo info;

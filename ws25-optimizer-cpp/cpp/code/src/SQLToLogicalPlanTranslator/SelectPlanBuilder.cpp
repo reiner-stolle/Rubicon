@@ -5,6 +5,41 @@
 
 #include <stdexcept>
 
+
+static void collectJoinConditions(
+    const TableRef *from,
+    std::vector<const Expr *> &conditions)
+{
+    if (!from)
+        return;
+
+    switch (from->type)
+    {
+    case kTableJoin:
+        if (from->join)
+        {
+            if (from->join->condition)
+                conditions.push_back(from->join->condition);
+
+            collectJoinConditions(from->join->left, conditions);
+            collectJoinConditions(from->join->right, conditions);
+        }
+        break;
+
+    case kTableCrossProduct:
+        if (from->list)
+        {
+            for (auto t : *from->list)
+                collectJoinConditions(t, conditions);
+        }
+        break;
+
+    default:
+        break;
+    }
+}
+
+
 // --- Aggregation detection ---
 
 std::optional<AggPattern> matchAgg(
@@ -560,6 +595,25 @@ std::shared_ptr<LogicalPlanNode> buildPlanForSelect(
     // e.g. WHERE o.user_id = u.id AND o.status = 'shipped'
     //   →  joinPreds: [o.user_id = u.id],  selectionPreds: [o.status = 'shipped']
     auto predicates = extractPredicates(sel->whereClause, aliasToBase);
+
+    // Also collect predicates from explicit JOIN ... ON ... clauses.
+    std::vector<const Expr *> joinConditions;
+    collectJoinConditions(sel->fromTable, joinConditions);
+
+    for (const Expr *condition : joinConditions)
+    {
+    auto joinGroups = extractPredicates(condition, aliasToBase);
+
+    predicates.joinPreds.insert(
+        predicates.joinPreds.end(),
+        joinGroups.joinPreds.begin(),
+        joinGroups.joinPreds.end());
+
+    predicates.selectionPreds.insert(
+        predicates.selectionPreds.end(),
+        joinGroups.selectionPreds.begin(),
+        joinGroups.selectionPreds.end());
+    }
 
     // Connects SCAN nodes via JOIN nodes using the join predicates.
     // e.g. joinPreds: [o.user_id = u.id]  →  JOIN(o.user_id=u.id) → SCAN(orders), SCAN(users)
