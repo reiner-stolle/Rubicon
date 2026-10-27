@@ -3,20 +3,26 @@
 # Configuration
 REPO_URL="https://github.com/gregrahn/ssb-kit.git"
 REPO_DIR="ssb_generator"
-SCALE_FACTORS=(1)
+SCALE_FACTORS=(50)
 PYTHON_CONVERTER="./convert_to_binary.py"
 CSV_DIR="csv"
 BIN_DIR="binary"
 SCHEMA_FILE="schema.txt"
 
+
 # Loop through scale factors
 for SF in "${SCALE_FACTORS[@]}"; do
     CSV_PATH="${CSV_DIR}/sf${SF}"
     BIN_PATH="${BIN_DIR}/sf${SF}"
+    RAW_PATH="$HOME/ssb_sf${SF}"
 
     # If binary data already exists, skip everything
-    if [ -d "$BIN_PATH" ] && find "$BIN_PATH" -mindepth 1 -type f -print -quit | grep -q .; then
-        echo "Binary data for scale factor $SF already exists. Skipping all steps for sf${SF}."
+    if [ -d "$BIN_PATH" ] \
+        && find "$BIN_PATH" -mindepth 1 -type f -print -quit | grep -q . \
+        && [ -d "$RAW_PATH" ] \
+        && find "$RAW_PATH" -mindepth 1 -type f -print -quit | grep -q .; then
+
+        echo "Binary and raw data for scale factor $SF already exist. Skipping all steps for sf${SF}."
         continue
     fi
 
@@ -44,7 +50,12 @@ for SF in "${SCALE_FACTORS[@]}"; do
     # Generate CSV data
     mkdir -p "../../$CSV_PATH"
     echo "Generating CSV data for scale factor $SF..."
-    ./dbgen -s "$SF" -T a -f -v
+
+    ./dbgen -s "$SF" -T a -f -v || {
+        echo "SSB generation failed"
+        exit 1
+    }
+
     mv *.tbl "../../$CSV_PATH"
 
     cd ../..  # Go back out of $REPO_DIR
@@ -52,9 +63,21 @@ for SF in "${SCALE_FACTORS[@]}"; do
     # Convert to binary
     echo "Converting CSV to binary for scale factor $SF..."
     mkdir -p "$BIN_PATH"
-    uv run "$PYTHON_CONVERTER" --input "$CSV_PATH" --output "$BIN_PATH" --schema "$SCHEMA_FILE" || { echo "Python conversion failed"; exit 1; }
+
+    uv run "$PYTHON_CONVERTER" \
+        --input "$CSV_PATH" \
+        --output "$BIN_PATH" || {
+            echo "Python conversion failed"
+            exit 1
+        }
 
     cp "$SCHEMA_FILE" "$BIN_PATH/"
+
+    # Keep the original SSB .tbl files for DuckDB verification.
+    # Move them instead of copying them because lineorder can be very large.
+    echo "Keeping raw SSB data in $RAW_PATH..."
+    rm -rf "$RAW_PATH"
+    mv "$CSV_PATH" "$RAW_PATH"
 
     echo "=== Done with scale factor $SF ==="
 done
